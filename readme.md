@@ -21,6 +21,7 @@ OpenVision is a Chrome extension designed to make web navigation accessible for 
 
 ## Technology Stack
 - **JavaScript**: The core language for building the extension.
+- **Typescript**: Language used to provide clarity into our codebase.
 - **Web Speech API**: Handles text-to-speech and speech recognition using Chrome's default AI model.
 
 ## Privacy & Ethics
