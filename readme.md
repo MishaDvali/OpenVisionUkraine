@@ -3,6 +3,10 @@
 ## Introduction
 OpenVision is a Chrome extension designed to make web navigation accessible for blind and visually impaired users. It provides voice feedback for text and interactive elements on a webpage, allowing users to browse the internet seamlessly using voice commands and hotkeys.
 
+## How to install
+
+### Download this repository. unzip it. Load as an unpacked extension into chrome extension manager. Enjoy. Later an extension will be available in the chrome extension store.
+
 ## Features
 - **Voice Over Support**: Reads webpage content aloud, including headings, paragraphs, links, and buttons.
 - **Hotkey Navigation**: Users can navigate through elements using customizable keyboard shortcuts.
