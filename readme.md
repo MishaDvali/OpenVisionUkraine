@@ -35,6 +35,57 @@ OpenVision is a Chrome extension designed to make web navigation accessible for 
 ## Get Involved
 We are looking for contributors and feedback to make OpenVision even better. Join us in making the web truly accessible for everyone!
 
-**Contact us at: mykhailo.dvali@gmail.com**
+# Code Documentation
 
+## Background Script (`background.js`)
+Handles hotkey commands and script injection.
+```javascript
+chrome.commands.onCommand.addListener((command) => {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    if (tabs.length === 0) return;
+    
+    if (command === "speak_page") {
+      chrome.scripting.executeScript({
+        target: { tabId: tabs[0].id },
+        files: ["content.js"]
+      });
+      chrome.tabs.sendMessage(tabs[0].id, { action: "toggle_speaking" });
+    } else if (command === "stop_speaking") {
+      chrome.tabs.sendMessage(tabs[0].id, { action: "stop_speaking" });
+    }
+  });
+});
+```
+
+## Content Script (`content.js`)
+Manages speech synthesis and recognition.
+```javascript
+let utterance;
+let isSpeaking = false;
+
+function speakText(text) {
+  utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = "en-US";
+  utterance.onend = () => { isSpeaking = false; };
+  speechSynthesis.speak(utterance);
+  isSpeaking = true;
+}
+
+function stopSpeaking() {
+  speechSynthesis.cancel();
+  isSpeaking = false;
+}
+
+chrome.runtime.onMessage.addListener((request) => {
+  if (request.action === "toggle_speaking") {
+    if (isSpeaking) stopSpeaking();
+    else speakText(document.body.innerText);
+  } else if (request.action === "stop_speaking") {
+    stopSpeaking();
+  }
+});
+```
+
+
+**Contact us at: mykhailo.dvali@gmail.com**
 
