@@ -1,4 +1,4 @@
-# OpenVision Chrome Extension
+# OpenVisionUkraine Chrome Extension
 
 ## Introduction
 OpenVision is a Chrome extension designed to make web navigation accessible for blind and visually impaired users. It provides voice feedback for text and interactive elements on a webpage, allowing users to browse the internet seamlessly using voice commands and hotkeys.
