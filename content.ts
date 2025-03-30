@@ -1,13 +1,13 @@
-let utterance;
-let pausedText = "";
-let isSpeaking = false;
-let lastSpokenButton = null;
+let utterance: SpeechSynthesisUtterance;
+let pausedText: string = "";
+let isSpeaking: boolean = false;
+let lastSpokenButton: HTMLElement | null = null;
 
-function speakText(text, startPos = 0) {
+function speakText(text: string, startPos: number = 0): void {
   console.log("Speaking text from position:", startPos);
   utterance = new SpeechSynthesisUtterance(text.slice(startPos));
   utterance.lang = "en-US";
-  utterance.onboundary = (event) => {
+  utterance.onboundary = (event: SpeechSynthesisEvent) => {
     pausedText = text.slice(event.charIndex);
   };
   utterance.onend = () => {
@@ -18,20 +18,20 @@ function speakText(text, startPos = 0) {
   isSpeaking = true;
 }
 
-function stopSpeaking() {
+function stopSpeaking(): void {
   console.log("Stopping speech.");
   speechSynthesis.cancel();
   isSpeaking = false;
 }
 
-function toggleSpeaking() {
+function toggleSpeaking(): void {
   if (isSpeaking) {
     stopSpeaking();
   } else {
     if (pausedText) {
       speakText(pausedText);
     } else {
-      let text = document.body.innerText.trim();
+      let text: string = document.body.innerText.trim();
       text = text.length > 500 ? text.slice(0, 500) + "..." : text;
       console.log("Extracted text:", text);
       pausedText = text;
@@ -40,30 +40,30 @@ function toggleSpeaking() {
   }
 }
 
-function announceFocusedButton() {
-  const activeElement = document.activeElement;
-  if (activeElement.tagName === "BUTTON" || activeElement.tagName === "A") {
+function announceFocusedButton(): void {
+  const activeElement: HTMLElement | null = document.activeElement as HTMLElement;
+  if (activeElement && (activeElement.tagName === "BUTTON" || activeElement.tagName === "A")) {
     if (activeElement !== lastSpokenButton) {
       lastSpokenButton = activeElement;
-      let text = activeElement.innerText.trim();
+      let text: string = activeElement.innerText.trim();
       if (!text) {
         text = activeElement.getAttribute("aria-label") ||
                activeElement.getAttribute("title") ||
                activeElement.getAttribute("value") ||
-               "Button";
+               "Button" || "";
       }
       speakText(text);
     }
   }
 }
 
-document.addEventListener("keydown", (event) => {
+document.addEventListener("keydown", (event: KeyboardEvent) => {
   if (event.key === "Tab") {
     setTimeout(announceFocusedButton, 100);
   }
 });
 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((request: { action: string }) => {
   console.log("Received message in content script:", request);
 
   if (request.action === "toggle_speaking") {
@@ -76,25 +76,25 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 if (!('webkitSpeechRecognition' in window)) {
   console.error('Web Speech API is not supported in this browser.');
 } else {
-  const recognition = new webkitSpeechRecognition();
+  const recognition: SpeechRecognition = new webkitSpeechRecognition();
   recognition.continuous = true;
   recognition.interimResults = false;
   recognition.lang = 'en-US';
 
-  recognition.onstart = () => {
+  recognition.onstart = (): void => {
     console.log('Speech recognition started. Speak into the microphone.');
   };
 
-  recognition.onerror = (event) => {
+  recognition.onerror = (event: SpeechRecognitionErrorEvent): void => {
     console.error('Speech recognition error:', event.error);
   };
 
-  recognition.onend = () => {
+  recognition.onend = (): void => {
     console.log('Speech recognition ended.');
   };
 
-  recognition.onresult = (event) => {
-    const transcript = event.results[event.results.length - 1][0].transcript.trim().toLowerCase();
+  recognition.onresult = (event: SpeechRecognitionEvent): void => {
+    const transcript: string = event.results[event.results.length - 1][0].transcript.trim().toLowerCase();
     console.log('Recognized:', transcript);
 
     if (transcript === 'start') {
@@ -106,10 +106,10 @@ if (!('webkitSpeechRecognition' in window)) {
     }
   };
 
-  function startReading() {
-    const text = document.body.innerText.trim();
+  function startReading(): void {
+    const text: string = document.body.innerText.trim();
     if (text.length > 0) {
-      const utterance = new SpeechSynthesisUtterance(text);
+      const utterance: SpeechSynthesisUtterance = new SpeechSynthesisUtterance(text);
       utterance.lang = 'en-US';
       speechSynthesis.speak(utterance);
       console.log('Reading started.');
@@ -118,12 +118,12 @@ if (!('webkitSpeechRecognition' in window)) {
     }
   }
 
-  function stopReading() {
+  function stopReading(): void {
     speechSynthesis.cancel();
     console.log('Reading stopped.');
   }
 
-  function resumeReading() {
+  function resumeReading(): void {
     speechSynthesis.resume();
     console.log('Reading resumed.');
   }
