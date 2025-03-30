@@ -6,7 +6,7 @@ let lastSpokenButton = null;
 function speakText(text, startPos = 0) {
   console.log("Speaking text from position:", startPos);
   utterance = new SpeechSynthesisUtterance(text.slice(startPos));
-  utterance.lang = "en-US";
+  utterance.lang = "uk-UA";
   utterance.onboundary = (event) => {
     pausedText = text.slice(event.charIndex);
   };
