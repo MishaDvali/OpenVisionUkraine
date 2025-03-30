@@ -1,3 +1,4 @@
+// background.js
 chrome.commands.onCommand.addListener((command) => {
   console.log("Received command:", command);
 

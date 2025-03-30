@@ -1,6 +1,8 @@
+// content.js
 let utterance;
 let pausedText = "";
 let isSpeaking = false;
+let lastSpokenButton = null;
 
 function speakText(text, startPos = 0) {
   console.log("Speaking text from position:", startPos);
@@ -38,6 +40,29 @@ function toggleSpeaking() {
     }
   }
 }
+
+function announceFocusedButton() {
+  const activeElement = document.activeElement;
+  if (activeElement.tagName === "BUTTON" || activeElement.tagName === "A") {
+    if (activeElement !== lastSpokenButton) {
+      lastSpokenButton = activeElement;
+      let text = activeElement.innerText.trim();
+      if (!text) {
+        text = activeElement.getAttribute("aria-label") ||
+               activeElement.getAttribute("title") ||
+               activeElement.getAttribute("value") ||
+               "Button";
+      }
+      speakText(text);
+    }
+  }
+}
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Tab") {
+    setTimeout(announceFocusedButton, 100);
+  }
+});
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   console.log("Received message in content script:", request);
