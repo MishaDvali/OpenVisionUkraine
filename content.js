@@ -1,4 +1,3 @@
-// content.js
 let utterance;
 let pausedText = "";
 let isSpeaking = false;
