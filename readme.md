@@ -9,12 +9,10 @@ OpenVision is a Chrome extension designed to make web navigation accessible for 
 - **Voice Command Control**: Allows users to interact with web pages hands-free by issuing simple voice commands.
 - **Smart Content Prioritization**: Determines the most relevant content on a webpage and reads it in a structured manner.
 - **Interactive Elements Control**: Enables pressing buttons, opening links, and filling forms using voice or hotkeys.
-- **ChatGPT Integration**: Users can ask for explanations of webpage content and receive voice responses.
 
 ## Technology Stack
 - **JavaScript**: The core language for building the extension.
 - **Web Speech API**: Handles text-to-speech and speech recognition.
-- **OpenAI API**: Enhances content understanding and navigation assistance.
 
 ## Privacy & Ethics
 - No user data is stored, shared, or used for AI training.
