@@ -74,3 +74,61 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
 });
 
+if (!('webkitSpeechRecognition' in window)) {
+  console.error('Web Speech API is not supported in this browser.');
+} else {
+  const recognition = new webkitSpeechRecognition();
+  recognition.continuous = true;
+  recognition.interimResults = false;
+  recognition.lang = 'en-US';
+
+  recognition.onstart = () => {
+    console.log('Speech recognition started. Speak into the microphone.');
+  };
+
+  recognition.onerror = (event) => {
+    console.error('Speech recognition error:', event.error);
+  };
+
+  recognition.onend = () => {
+    console.log('Speech recognition ended.');
+  };
+
+  recognition.onresult = (event) => {
+    const transcript = event.results[event.results.length - 1][0].transcript.trim().toLowerCase();
+    console.log('Recognized:', transcript);
+
+    if (transcript === 'start') {
+      startReading();
+    } else if (transcript === 'stop') {
+      stopReading();
+    } else if (transcript === 'resume') {
+      resumeReading();
+    }
+  };
+
+  function startReading() {
+    const text = document.body.innerText.trim();
+    if (text.length > 0) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      speechSynthesis.speak(utterance);
+      console.log('Reading started.');
+    } else {
+      console.log('No text available to read.');
+    }
+  }
+
+  function stopReading() {
+    speechSynthesis.cancel();
+    console.log('Reading stopped.');
+  }
+
+  function resumeReading() {
+    speechSynthesis.resume();
+    console.log('Reading resumed.');
+  }
+
+  recognition.start();
+}
+

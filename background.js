@@ -26,5 +26,16 @@ chrome.commands.onCommand.addListener((command) => {
       chrome.tabs.sendMessage(tabs[0].id, { action: "stop_speaking" });
     }
   });
+})
+chrome.commands.onCommand.addListener((command) => {
+  if (command === "toggle_speech") {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (tabs.length === 0) return;
+      chrome.scripting.executeScript({
+        target: { tabId: tabs[0].id },
+        files: ["content.js"]
+      });
+    });
+  }
 });
-
+;
